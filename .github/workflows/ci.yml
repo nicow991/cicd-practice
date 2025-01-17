@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Ruby
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'  # Specify your Ruby version
+
+      # Install Ruby dependencies
+      - name: Install Ruby dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      # Run Ruby tests
+      - name: Run Ruby tests
+        run: bundle exec rspec  # Modify this command based on your test framework
+
+      # Set up Node.js for React
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Specify your Node.js version
+
+      # Install Node.js dependencies
+      - name: Install Node.js dependencies
+        run: |
+          cd frontend  # Modify if your React app is in a different directory
+          npm install
+
+      # Run React tests
+      - name: Run React tests
+        run: |
+          cd frontend
+          npm test -- --watchAll=false  # Modify based on your testing setup
